@@ -49,6 +49,10 @@ class Income(Wallet):
         self.balance = self.balance - new_value[1]
         self.database.data = self.data
 
+    @property
+    def sum_income(self) -> int:
+        return sum(income["sum"] for income in self.data["income"])
+
 
 class Expenses(Wallet):
     """

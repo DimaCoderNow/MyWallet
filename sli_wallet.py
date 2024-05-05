@@ -37,7 +37,8 @@ class WalletCLI:
                 print(self.prefix_out, self.my_wallet.balance)
 
             elif self.__command == "sum_income":
-                ...
+                print(self.prefix_out, "Сумма расходов")
+                print(self.prefix_out, self.my_income.sum_income)
 
             elif self.__command == "sum_expenses":
                 print(self.prefix_out, "Сумма доходов")
