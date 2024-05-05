@@ -1,3 +1,7 @@
+import sys
+from typing import List
+
+
 class Commands:
     """
         Обработка команд
@@ -58,5 +62,24 @@ class FindItem:
         ...
 
 
+class WalletCLI:
+    def __init__(self):
+        self.system_args: List = sys.argv
+
+
+    def run(self):
+        if len(self.system_args) < 2:
+            print("Используйте: wallet <command>")
+            sys.exit(1)
+
+        command = self.system_args[1]
+
+        if command == "start":
+            print("Использование: wallet <start>")
+        else:
+            print("Недопустимая команда. Доступные команды: 'start', ")
+
+
 if __name__ == '__main__':
-    app = Commands()
+    wallet = WalletCLI()
+    wallet.run()
