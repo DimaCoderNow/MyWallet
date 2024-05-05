@@ -1,4 +1,5 @@
 import sys
+from typing import List
 
 from my_wallet import Wallet, Income
 
@@ -38,12 +39,15 @@ class WalletCLI:
             elif self.__command == "sum_expenses":
                 ...
             elif self.__command == "get_income":
-                ...
+                self._print_category(self.my_income.income)
+                self._success()
             elif self.__command == "get_expenses":
                 ...
             elif self.__command == "add_income":
                 print(self.prefix_out, "Введите данные расхода:")
-                self.my_income.income = (input(f"{self.prefix_in}Описание: "), int(input(f"{self.prefix_in}Сумма: ")))
+                self.my_income.income = (
+                    input(f"{self.prefix_in}Описание: "), int(input(f"{self.prefix_in}Сумма: "))
+                )
                 self._success()
             elif self.__command == "add_expenses":
                 ...
@@ -65,8 +69,14 @@ class WalletCLI:
     def _get_command(self) -> str:
         return input(self.prefix_in)
 
-    def _success(self):
+    def _success(self) -> None:
         print(self.prefix_out, "success!")
+
+    def _print_category(self, categories: List[dict]) -> None:
+        print(self.prefix_out, "ID  Дата        Сумма Описание  ")
+        [print(
+            self.prefix_out, i, cat["date"], "|", cat["sum"], "|", cat["description"]
+        ) for i, cat in enumerate(categories)]
 
 
 if __name__ == '__main__':
