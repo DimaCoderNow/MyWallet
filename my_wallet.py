@@ -13,9 +13,13 @@ class Wallet:
     def __init__(self):
         self.data: Dict = self.database.data
 
-    def get_balance(self) -> int:
-        balance = self.data["balance"]
-        return balance
+    @property
+    def balance(self) -> int:
+        return self.data["balance"]
+
+    @balance.setter
+    def balance(self, value) -> None:
+        self.data["balance"] = value
 
     def _create_data(self, value: (str, int)) -> Dict:
         now = datetime.now()
@@ -42,14 +46,24 @@ class Income(Wallet):
     def income(self, new_value: (str, int)) -> None:
         new_income = self._create_data(new_value)
         self.data["income"].append(new_income)
+        self.balance = self.balance - new_value[1]
         self.database.data = self.data
 
 
-class Expenses:
+class Expenses(Wallet):
     """
         Учет доходов
     """
     def __init__(self):
-        ...
+        super().__init__()
 
+    @property
+    def expenses(self) -> List[Dict]:
+        return self.data["expenses"]
 
+    @expenses.setter
+    def expenses(self, new_value: (str, int)) -> None:
+        new_expenses = self._create_data(new_value)
+        self.data["expenses"].append(new_expenses)
+        self.balance = self.balance + new_value[1]
+        self.database.data = self.data

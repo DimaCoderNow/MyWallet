@@ -1,7 +1,7 @@
 import sys
 from typing import List
 
-from my_wallet import Wallet, Income
+from my_wallet import Wallet, Income, Expenses
 
 
 class WalletCLI:
@@ -10,6 +10,7 @@ class WalletCLI:
     """
     my_wallet = Wallet()
     my_income = Income()
+    my_expenses = Expenses()
     help_cmd = [
         "balance - посмотреть текущий баланс",
         "sum_income - сумма расходов",
@@ -33,31 +34,38 @@ class WalletCLI:
     def run(self):
         while True:
             if self.__command == "balance":
-                print(self.prefix_out, Wallet().get_balance())
+                print(self.prefix_out, self.my_wallet.balance)
+
             elif self.__command == "sum_income":
                 ...
+
             elif self.__command == "sum_expenses":
                 ...
+
             elif self.__command == "get_income":
                 self._print_category(self.my_income.income)
-                self._success()
+
             elif self.__command == "get_expenses":
-                ...
+                self._print_category(self.my_expenses.expenses)
+
             elif self.__command == "add_income":
-                print(self.prefix_out, "Введите данные расхода:")
-                self.my_income.income = (
-                    input(f"{self.prefix_in}Описание: "), int(input(f"{self.prefix_in}Сумма: "))
-                )
+                self.my_income.income = self._input_category("расхода")
                 self._success()
+
             elif self.__command == "add_expenses":
-                ...
+                self.my_expenses.expenses = self._input_category("дохода")
+                self._success()
+
             elif self.__command == "find_income":
                 ...
+
             elif self.__command == "find_expenses":
                 ...
+
             elif self.__command == "exit":
                 print(self.prefix_out, "Программа завершена")
                 sys.exit(0)
+
             elif self.__command == "help":
                 [print(self.prefix_out, cmd) for cmd in self.help_cmd]
 
@@ -77,6 +85,11 @@ class WalletCLI:
         [print(
             self.prefix_out, i, cat["date"], "|", cat["sum"], "|", cat["description"]
         ) for i, cat in enumerate(categories)]
+        self._success()
+
+    def _input_category(self, type_cat: str) -> (str, int):
+        print(f"{self.prefix_out} Введите данные {type_cat}:")
+        return input(f"{self.prefix_in}Описание: "), int(input(f"{self.prefix_in}Сумма: "))
 
 
 if __name__ == '__main__':
