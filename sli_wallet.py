@@ -40,7 +40,8 @@ class WalletCLI:
                 ...
 
             elif self.__command == "sum_expenses":
-                ...
+                print(self.prefix_out, "Сумма доходов")
+                print(self.prefix_out, self.my_expenses.sum_expenses)
 
             elif self.__command == "get_income":
                 self._print_category(self.my_income.income)
@@ -85,7 +86,6 @@ class WalletCLI:
         [print(
             self.prefix_out, i, cat["date"], "|", cat["sum"], "|", cat["description"]
         ) for i, cat in enumerate(categories)]
-        self._success()
 
     def _input_category(self, type_cat: str) -> (str, int):
         print(f"{self.prefix_out} Введите данные {type_cat}:")
