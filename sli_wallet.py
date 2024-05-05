@@ -4,6 +4,11 @@ from my_wallet import Wallet, Income
 
 
 class WalletCLI:
+    """
+        Получение команд от пользователя для взаимодействия с кошельком
+    """
+    my_wallet = Wallet()
+    my_income = Income()
     help_cmd = [
         "balance - посмотреть текущий баланс",
         "sum_income - сумма расходов",
@@ -37,7 +42,9 @@ class WalletCLI:
             elif self.__command == "get_expenses":
                 ...
             elif self.__command == "add_income":
-                ...
+                print(self.prefix_out, "Введите данные расхода:")
+                self.my_income.income = (input(f"{self.prefix_in}Описание: "), int(input(f"{self.prefix_in}Сумма: ")))
+                self._success()
             elif self.__command == "add_expenses":
                 ...
             elif self.__command == "find_income":
@@ -57,6 +64,9 @@ class WalletCLI:
 
     def _get_command(self) -> str:
         return input(self.prefix_in)
+
+    def _success(self):
+        print(self.prefix_out, "success!")
 
 
 if __name__ == '__main__':
