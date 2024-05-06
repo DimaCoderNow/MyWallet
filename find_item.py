@@ -3,7 +3,7 @@ from typing import Dict, List
 
 class FindItem:
     """
-        Поиск записей по ID, дате или сумме
+        Поиск записей по описанию, дате или сумме
     """
 
     def __init__(self, db, category):
@@ -13,13 +13,22 @@ class FindItem:
         self.item_id = None
 
     def find_sum(self) -> List[Dict]:
+        """
+            Поиск записи по сумме
+        """
         self.item = int(self.item)
         return [income for income in self.data[self.category] if self.item == income["sum"]]
 
     def find_date(self) -> List[Dict]:
+        """
+            Поиск записи по дате
+        """
         return [income for income in self.data[self.category] if self.item == income["date"]]
 
     def find_description(self):
+        """
+            Поиск записи по описанию
+        """
         return [income for income in self.data[self.category] if self.item in income["description"]]
 
     def get_by_id(self) -> Dict | None:

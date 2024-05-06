@@ -24,8 +24,10 @@ class WalletCLI:
         "sum_expenses - сумма доходов",
         "get_income - посмотреть расходы",
         "get_expenses - посмотреть доходы",
-        "add_income - добавить расходы",
-        "add_expenses - добавить доходы",
+        "add_income - добавить расход",
+        "add_expenses - добавить доход",
+        "update_income - изменить расход",
+        "update_expenses - изменить доход",
         "find_income - поиск расходов",
         "find_expenses - поиск доходов",
         "exit - выход из программы",
@@ -38,9 +40,10 @@ class WalletCLI:
         print(f"{self.prefix_out} Добро пожаловать!")
         self.__command = self._get_command()
 
-    def run(self):
+    def run(self) -> None:
         while True:
             if self.__command == "balance":
+                print(self.prefix_out, "Ваш баланс")
                 print(self.prefix_out, self.my_wallet.balance)
 
             elif self.__command == "sum_income":
@@ -78,6 +81,7 @@ class WalletCLI:
             elif self.__command == "find_income":
                 result = self._item_find(self.find_income)
                 self._print_category(result)
+
             elif self.__command == "find_expenses":
                 result = self._item_find(self.find_expenses)
                 self._print_category(result)
@@ -95,22 +99,38 @@ class WalletCLI:
             self.__command = self._get_command()
 
     def _get_command(self) -> str:
+        """
+            Получение команды от пользователя
+        """
         return input(self.prefix_in)
 
     def _success(self) -> None:
-        print(self.prefix_out, "success!")
+        """
+            Вывод в консоль в случае успеха изменения или добавления записи
+        """
+        print(self.prefix_out, "\033[32m" + "success!" + "\033[0m")
 
     def _print_category(self, categories: List[Dict]) -> None:
+        """
+            Вывод в консоль записей в виде таблицы.
+        """
         print(self.prefix_out, "ID  Дата        Сумма Описание  ")
         [print(
             self.prefix_out, i, cat["date"], "|", cat["sum"], "|", cat["description"]
         ) for i, cat in enumerate(categories)]
 
     def _input_category(self, type_cat: str) -> (str, int):
+        """
+            Получение данных от пользователя для создания или изменения записи.
+        """
         print(f"{self.prefix_out} Введите данные {type_cat}:")
         return input(f"{self.prefix_in}Описание: "), int(input(f"{self.prefix_in}Сумма: "))
 
     def _item_find(self, find: FindItem) -> List[Dict]:
+        """
+            Получение данных от пользователя для поиска с последующим вызовом необходимых методов для поиска.
+            В зависимости от типа данных поиск осуществляется по дате, описанию или сумме записи.
+        """
         find.item = input(f"{self.prefix_out} Введите данные для поиска: ")
         if not find.item:
             print(self.prefix_out, "Пустой запрос!")
