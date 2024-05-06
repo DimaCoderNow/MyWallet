@@ -24,6 +24,19 @@ class Wallet:
             "sum": value[1]
         }
 
+    def _update_item(self, item_id: int, new_value: (str, int), item_key: str) -> None:
+        update_data = self.db.data
+        if new_value[0]:
+            update_data[item_key][item_id]["description"] = new_value[0]
+        if new_value[1]:
+            diff_balance = update_data[item_key][item_id]["sum"] - new_value[1]
+            update_data[item_key][item_id]["sum"] = new_value[1]
+            if item_key == "income":
+                update_data["balance"] = self.balance + diff_balance
+            else:
+                update_data["balance"] = self.balance - diff_balance
+        self.db.data = update_data
+
 
 class Income(Wallet):
     """
@@ -49,14 +62,7 @@ class Income(Wallet):
         return sum(income["sum"] for income in self.db.data["income"])
 
     def update(self, income_id: int, new_value: (str, int)):
-        update_data = self.db.data
-        if new_value[0]:
-            update_data["income"][income_id]["description"] = new_value[0]
-        if new_value[1]:
-            diff_balance = update_data["income"][income_id]["sum"] - new_value[1]
-            update_data["income"][income_id]["sum"] = new_value[1]
-            update_data["balance"] = self.balance + diff_balance
-        self.db.data = update_data
+        self._update_item(income_id, new_value, "income")
 
 
 class Expenses(Wallet):
@@ -81,3 +87,6 @@ class Expenses(Wallet):
     @property
     def sum_expenses(self) -> int:
         return sum(expense["sum"] for expense in self.db.data["expenses"])
+
+    def update(self, expenses_id: int, new_value: (str, int)):
+        self._update_item(expenses_id, new_value, "expenses")

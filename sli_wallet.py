@@ -70,6 +70,11 @@ class WalletCLI:
                 self.my_income.update(income_id, self._input_category("расхода"))
                 self._success()
 
+            elif self.__command == "update_expenses":
+                expenses_id = int(input(f"{self.prefix_in}Введите id дохода для обновления: "))
+                self.my_expenses.update(expenses_id, self._input_category("дохода"))
+                self._success()
+
             elif self.__command == "find_income":
                 result = self._item_find(self.find_income)
                 self._print_category(result)
