@@ -17,7 +17,8 @@ class DataBase:
 
     @property
     def data(self) -> Dict:
-        return self._data
+        data = self._get_data()
+        return data
 
     @data.setter
     def data(self, new_data: Dict):
