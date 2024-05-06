@@ -8,18 +8,12 @@ class Wallet:
     """
         Кошелек пользователя
     """
-    database: DataBase = DataBase()
-
-    def __init__(self):
-        self.data: Dict = self.database.data
+    def __init__(self, db):
+        self.db = db
 
     @property
     def balance(self) -> int:
-        return self.data["balance"]
-
-    @balance.setter
-    def balance(self, value) -> None:
-        self.data["balance"] = value
+        return self.db.data["balance"]
 
     def _create_data(self, value: (str, int)) -> Dict:
         now = datetime.now()
@@ -35,43 +29,45 @@ class Income(Wallet):
     """
         Учет расходов
     """
-    def __init__(self):
-        super().__init__()
+    def __init__(self, db):
+        super().__init__(db)
 
     @property
     def income(self) -> List[Dict]:
-        return self.data["income"]
+        return self.db.data["income"]
 
     @income.setter
     def income(self, new_value: (str, int)) -> None:
         new_income = self._create_data(new_value)
-        self.data["income"].append(new_income)
-        self.balance = self.balance - new_value[1]
-        self.database.data = self.data
+        new_data = self.db.data
+        new_data["income"].append(new_income)
+        new_data["balance"] = self.balance - new_value[1]
+        self.db.data = new_data
 
     @property
     def sum_income(self) -> int:
-        return sum(income["sum"] for income in self.data["income"])
+        return sum(income["sum"] for income in self.db.data["income"])
 
 
 class Expenses(Wallet):
     """
         Учет доходов
     """
-    def __init__(self):
-        super().__init__()
+    def __init__(self, db):
+        super().__init__(db)
 
     @property
     def expenses(self) -> List[Dict]:
-        return self.data["expenses"]
+        return self.db.data["expenses"]
 
     @expenses.setter
     def expenses(self, new_value: (str, int)) -> None:
         new_expenses = self._create_data(new_value)
-        self.data["expenses"].append(new_expenses)
-        self.balance = self.balance + new_value[1]
-        self.database.data = self.data
+        new_data = self.db.data
+        new_data["expenses"].append(new_expenses)
+        new_data["balance"] = self.balance + new_value[1]
+        self.db.data = new_data
 
     @property
     def sum_expenses(self) -> int:
-        return sum(expense["sum"] for expense in self.data["expenses"])
+        return sum(expense["sum"] for expense in self.db.data["expenses"])
