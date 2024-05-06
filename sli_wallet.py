@@ -1,6 +1,10 @@
 import sys
-from typing import List
+import re
 
+from typing import List, Dict
+
+from db.db import DataBase
+from find_item import FindItem
 from my_wallet import Wallet, Income, Expenses
 
 
@@ -8,9 +12,12 @@ class WalletCLI:
     """
         Получение команд от пользователя для взаимодействия с кошельком
     """
-    my_wallet = Wallet()
-    my_income = Income()
-    my_expenses = Expenses()
+    db = DataBase()
+    my_wallet = Wallet(db)
+    my_income = Income(db)
+    my_expenses = Expenses(db)
+    find_income = FindItem(db, "income")
+    find_expenses = FindItem(db, "expenses")
     help_cmd = [
         "balance - посмотреть текущий баланс",
         "sum_income - сумма расходов",
@@ -59,10 +66,11 @@ class WalletCLI:
                 self._success()
 
             elif self.__command == "find_income":
-                ...
-
+                result = self._item_find(self.find_income)
+                self._print_category(result)
             elif self.__command == "find_expenses":
-                ...
+                result = self._item_find(self.find_expenses)
+                self._print_category(result)
 
             elif self.__command == "exit":
                 print(self.prefix_out, "Программа завершена")
@@ -82,7 +90,7 @@ class WalletCLI:
     def _success(self) -> None:
         print(self.prefix_out, "success!")
 
-    def _print_category(self, categories: List[dict]) -> None:
+    def _print_category(self, categories: List[Dict]) -> None:
         print(self.prefix_out, "ID  Дата        Сумма Описание  ")
         [print(
             self.prefix_out, i, cat["date"], "|", cat["sum"], "|", cat["description"]
@@ -91,6 +99,18 @@ class WalletCLI:
     def _input_category(self, type_cat: str) -> (str, int):
         print(f"{self.prefix_out} Введите данные {type_cat}:")
         return input(f"{self.prefix_in}Описание: "), int(input(f"{self.prefix_in}Сумма: "))
+
+    def _item_find(self, find: FindItem) -> List[Dict]:
+        find.item = input(f"{self.prefix_out} Введите данные для поиска")
+        if not find.item:
+            print(self.prefix_out, "Пустой запрос!")
+            return []
+        elif find.item.isdigit():
+            return find.find_sum()
+        elif re.match(r"\b\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\b", find.item):
+            return find.find_date()
+        else:
+            return find.find_description()
 
 
 if __name__ == '__main__':
