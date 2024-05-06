@@ -65,6 +65,11 @@ class WalletCLI:
                 self.my_expenses.expenses = self._input_category("дохода")
                 self._success()
 
+            elif self.__command == "update_income":
+                income_id = int(input(f"{self.prefix_in}Введите id расхода для обновления: "))
+                self.my_income.update(income_id, self._input_category("расхода"))
+                self._success()
+
             elif self.__command == "find_income":
                 result = self._item_find(self.find_income)
                 self._print_category(result)
@@ -101,7 +106,7 @@ class WalletCLI:
         return input(f"{self.prefix_in}Описание: "), int(input(f"{self.prefix_in}Сумма: "))
 
     def _item_find(self, find: FindItem) -> List[Dict]:
-        find.item = input(f"{self.prefix_out} Введите данные для поиска")
+        find.item = input(f"{self.prefix_out} Введите данные для поиска: ")
         if not find.item:
             print(self.prefix_out, "Пустой запрос!")
             return []

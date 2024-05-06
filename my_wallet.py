@@ -48,6 +48,16 @@ class Income(Wallet):
     def sum_income(self) -> int:
         return sum(income["sum"] for income in self.db.data["income"])
 
+    def update(self, income_id: int, new_value: (str, int)):
+        update_data = self.db.data
+        if new_value[0]:
+            update_data["income"][income_id]["description"] = new_value[0]
+        if new_value[1]:
+            diff_balance = update_data["income"][income_id]["sum"] - new_value[1]
+            update_data["income"][income_id]["sum"] = new_value[1]
+            update_data["balance"] = self.balance + diff_balance
+        self.db.data = update_data
+
 
 class Expenses(Wallet):
     """
