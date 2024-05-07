@@ -124,7 +124,9 @@ class WalletCLI:
             Получение данных от пользователя для создания или изменения записи.
         """
         print(f"{self.prefix_out} Введите данные {type_cat}:")
-        return input(f"{self.prefix_in}Описание: "), int(input(f"{self.prefix_in}Сумма: "))
+        description = input(f"{self.prefix_in}Описание: ")
+        sum_cat = input(f"{self.prefix_in}Сумма: ")
+        return description, int(sum_cat) if sum_cat else 0
 
     def _item_find(self, find: FindItem) -> List[Dict]:
         """
